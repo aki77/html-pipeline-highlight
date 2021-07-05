@@ -21,7 +21,11 @@ module HTML
 
       def apply_filter(content)
         content.gsub(@context[:highlight_pattern]) do |text|
-          %(<span class="#{class_name}">#{ERB::Util.html_escape(text)}</span>)
+          if converter
+            converter.call(Regexp.last_match)
+          else
+            %(<span class="#{class_name}">#{ERB::Util.html_escape(text)}</span>)
+          end
         end
       end
 
@@ -33,6 +37,10 @@ module HTML
 
       def class_name
         @context[:highlight_class_name] || DEFAULT_CLASS_NAME
+      end
+
+      def converter
+        @context[:highlight_converter]
       end
     end
   end

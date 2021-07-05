@@ -28,4 +28,12 @@ RSpec.describe HTML::Pipeline::HighlightFilter do
 
     it { is_expected.to eq '<span class="lang">Ruby</span>は絶妙にバランスのとれた言語です。 <span class="lang">Ruby</span>の作者である、Matzことまつもと' }
   end
+
+  context 'with converter' do
+    subject { HTML::Pipeline::HighlightFilter.new(text, highlight_pattern: /(@Matz)(\s?)/i, highlight_converter: ->(matches) { %(<span class="highlight">#{ERB::Util.html_escape(matches[1])}</span>#{matches[2]}) } ).call.to_s }
+
+    let(:text) { '@Matz が作ったRubyは絶妙にバランスのとれた言語です。 Rubyの作者である、@Matz ことまつもと' }
+
+    it { is_expected.to eq '<span class="highlight">@Matz</span> が作ったRubyは絶妙にバランスのとれた言語です。 Rubyの作者である、<span class="highlight">@Matz</span> ことまつもと' }
+  end
 end
