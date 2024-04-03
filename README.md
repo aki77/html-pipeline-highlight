@@ -1,6 +1,6 @@
-# HTML::Pipeline::Highlight
+# HTMLPipeline::Highlight
 
-Highlight filter for [html\-pipeline](https://github.com/jch/html-pipeline).
+Highlight NodeFilter for [html\-pipeline](https://github.com/gjtorikian/html-pipeline).
 
 ## Installation
 
@@ -21,8 +21,8 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-filter = HTML::Pipeline::HighlightFilter.new('Wondering why Ruby is so popular?', highlight_pattern: /ruby/i)
-filter.call.to_s # => 'Wondering why <span class="highlight">Ruby</span> is so popular?'
+result = HTMLPipeline::HighlightFilter.call('<div>Wondering why Ruby is so popular?</div>', context: { highlight_pattern: /ruby/i })
+result.to_s # => '<div>Wondering why <span class="highlight">Ruby</span> is so popular?</div>'
 ```
 
 ## Development
@@ -42,4 +42,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Html::Pipeline::Highlight project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/aki77/html-pipeline-highlight/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the HTMLPipeline::Highlight project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/aki77/html-pipeline-highlight/blob/master/CODE_OF_CONDUCT.md).

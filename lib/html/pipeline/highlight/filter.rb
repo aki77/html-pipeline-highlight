@@ -1,47 +1,40 @@
-require 'html/pipeline'
+require 'html_pipeline'
 
-module HTML
-  class Pipeline
-    class HighlightFilter < Filter
-      IGNORE_PARENTS = %w[pre code a style script].to_set
-      DEFAULT_CLASS_NAME = 'highlight'
+class HTMLPipeline
+  class HighlightFilter < NodeFilter
+    DEFAULT_IGNORED_ANCESTOR_TAGS = %w[pre code a style script].freeze
+    DEFAULT_CLASS_NAME = 'highlight'
 
-      def call
-        doc.xpath('.//text()').each do |node|
-          next if has_ancestor?(node, IGNORE_PARENTS)
+    def selector
+      Selma::Selector.new(match_text_within: "*", ignore_text_within: DEFAULT_IGNORED_ANCESTOR_TAGS)
+    end
 
-          content = node.to_html
-          html = apply_filter(content)
-          next if html == content
+    def handle_text_chunk(text)
+      text.replace(apply_filter(text.to_s), as: :html)
+    end
 
-          node.replace(html)
-        end
-        doc
-      end
-
-      def apply_filter(content)
-        content.gsub(@context[:highlight_pattern]) do |text|
-          if converter
-            converter.call(Regexp.last_match)
-          else
-            %(<span class="#{class_name}">#{ERB::Util.html_escape(text)}</span>)
-          end
+    def apply_filter(content)
+      content.gsub(context[:highlight_pattern]) do |text|
+        if converter
+          converter.call(Regexp.last_match)
+        else
+          %(<span class="#{class_name}">#{ERB::Util.html_escape(text)}</span>)
         end
       end
+    end
 
-      def validate
-        needs(:highlight_pattern)
-      end
+    def validate
+      needs(:highlight_pattern)
+    end
 
-      private
+    private
 
-      def class_name
-        @context[:highlight_class_name] || DEFAULT_CLASS_NAME
-      end
+    def class_name
+      context.fetch(:highlight_class_name, DEFAULT_CLASS_NAME)
+    end
 
-      def converter
-        @context[:highlight_converter]
-      end
+    def converter
+      context[:highlight_converter]
     end
   end
 end
