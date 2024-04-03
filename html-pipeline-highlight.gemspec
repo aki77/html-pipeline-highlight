@@ -2,7 +2,7 @@ require_relative 'lib/html/pipeline/highlight/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "html-pipeline-highlight"
-  spec.version       = HTML::Pipeline::Highlight::VERSION
+  spec.version       = HTMLPipeline::Highlight::VERSION
   spec.authors       = ["aki77"]
   spec.email         = ["aki77@users.noreply.github.com"]
 
@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "html-pipeline"
+  spec.add_dependency "html-pipeline", "~> 3.0"
 end
